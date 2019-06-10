@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get 'events/index'
+  get 'events/show'
+  get 'events/new'
+  get 'events/edit'
+  get 'user/show'
   get 'home/index'
   devise_for :users
   devise_scope :user do
