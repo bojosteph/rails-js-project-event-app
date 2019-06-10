@@ -1,2 +1,27 @@
-<h1>Events#show</h1>
-<p>Find me in app/views/events/show.html.erb</p>
+
+
+<a href="#" class="js-next" data-id="<%=@event.id%>">Next event</a>
+<h1 class="eventName"><%= @event.name %></h1>
+<p class="eventStart"><%= @event.start_date %></p>
+<p class="eventEnd"><%= @event.end_date %></p>
+<p class="eventLocation"><%= @event.location %></p>
+<p class="eventDescription"><%= @event.description%></p>
+
+<script type="text/javascript" charset="utf-8">
+$(function () {
+   $(".js-next").on("click", function (event) {
+    event.preventDefault()
+      
+      var nextId = parseInt($(".js-next").attr("data-id")) + 1;
+      $.get("/events/" + nextId + ".json", function (data) {
+        $(".eventName").html("What: " + data["name"]);
+        $(".eventStart").html("When: " + data["start_date"]);
+        $(".eventEnd").html("When: " + data["start_date"]);
+        $(".eventLocation").html("Where: " + data["location"]);
+        $(".eventDescription").html("Details: " + data["description"]);
+        
+        $(".js-next").attr("data-id", data["id"]);
+      });
+    });
+  });
+</script>

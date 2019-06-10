@@ -1,2 +1,21 @@
-<h1>Events#index</h1>
-<p>Find me in app/views/events/index.html.erb</p>
+<h1>Events</h1>
+<% @events.each do |event| %>
+<h3><%= event.name %></h3>
+<div id="event-<%= event.id %>"><%= truncate(event.description) %></div>
+<button class="js-more" data-id="<%= event.id %>">More Info</button>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    $(".js-more").on("click", function () {
+      var id = $(this).data("id");
+      $.get("/events/" + id + ".json", function (data) {
+        var event = data;
+
+         }
+        var descriptionText = "<p>" + event["description"] + "</p><p>" +  "</p>";
+        $("#event-" + id).html(descriptionText);
+      });
+    });
+  });
+</script>

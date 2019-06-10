@@ -6,7 +6,7 @@ class Event < ApplicationRecord
   
   validate :date_must_be_current, if: :has_date_range?
   validate :correct_date_range, if: :has_date_range?
-  validate :no_overlapping_events, on: :create
+  validate :no_overlapping_events
 
   # before_save :upcase_name
 
@@ -34,13 +34,12 @@ class Event < ApplicationRecord
   end
 
   def no_overlapping_events
-    event = Event.overlapping(start_date, end_date)
-    overlaps = event.where('planner_id = ?', planner_id)
-
+    overlaps = Event.overlapping(start_date, end_date)
+    overlaps = overlaps.where("id != ?", id) if id.present?
     if overlaps.any?
-      dates = overlaps.map do |e|
-        [e.start_date.strftime('Start Of Event : %A, %b %e, at %l:%M %p'), e.end_date.strftime('End Of Event : %A, %b %e, at %l:%M %p')].join(' to ')
-      end.join(', ')
+      dates = overlaps.map {|e|
+        [e.start_date, e.end_date].join(" to ")
+      }.join(", ")
       errors.add(:base, "must not overlap existing events. Overlaps: #{dates}")
     end
   end
